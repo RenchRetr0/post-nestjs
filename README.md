@@ -1,73 +1,59 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
-
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
-
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Installation
-
-```bash
-$ npm install
+# Post-backend NestJS
+Была написана логика:
+- Регистрация
+- Авторизация
+- Содание поста
+- Получение всех постов
+---
+Перед началом работы нужно выполнить следующие действия:
+1) Скачать данную папку
+2) Разархивировать файл
+3) В корневой папке "post-backend" создать файл '.env'
+4) В созданном файле '.env' добавить следующие переменные:
+    - "DB_URI" - Отвечает за подключение к базе данных по url-ссылке.
+    Пример: mongodb://localhost:27017/posts
+    - "SECRET_TOKEN" - Набор случайных символов для генерации JWT-токена
+5) Скачать все необходимые библиотеки.
+Это можно сделать при помощи команды:
 ```
-
-## Running the app
-
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+npm i
 ```
-
-## Test
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+6) Запустить данную логику, через терминал в корневом файле, при помощи команды:
 ```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+npm run start:dev
+```
+7) Открыть любой браузер и перейти по следующей ссылке: "http://localhost:3000/api"
+Там должна открыться swagger документация.
+---
+##USER
+1) По ссылке "http://localhost:3000/user/create" или же в swagger "/user/create" можно создать пользователя указав следующие данные:
+    - "login" - Ваш логин
+    - "email" - Ваша электронная почта
+    - "password" - ваш пароль
+При регистрации первый зарегестрированный USER будет иметь роль "admin".
+Если вы не желаете давать первому зарестрированному пользователю роль администратора, то в файле "src/modules/user/user.service.ts" удалите следующие строчки кода:
+    - 18 строка кода: "const role = await this.roleForFirstUser();"
+    - 23 строка кода: "role: role,"
+И тогда любой зарегестрированный пользователь будет иметь роль "USER".
+2) По ссылке "http://localhost:3000/user/login" или же в swagger "/user/login" можно авторизоваться указав следующие данные:
+    - email
+    - password
+После чего вам вернёт ваш логин, почту и JWT-токен (нужно будет скопировать)
+3) Есть возможность проверки корректности JWT-токена по ссылке "http://localhost:3000/auth/user" или же в swagger "/auth/user".
+Для этого нужно заполнить поле "Value" нажав на значёк замка.
+Поле отправить запроз и получить результат.
+---
+##POST
+1) Создать посто может только авторизованный администратор(используйте JWT-токен).
+Если вы хотите добавить роль, которая так же имеет возможность создавать роль, то перейдите в файл "src/modules/post/post.controller.ts". И в строке 18 добавте роль.
+Пример: "@Roles('admin', 'members')"
+Для создания введите следующие данные:
+    - title - титул поста
+    - description - описание поста
+2) Получить все посты может любой гость и авторизованный пользователь по ссылке "http://localhost:3000/post/posts" или же в swagger "/post/posts".
+Вы получите все посты с информацией:
+    - Титул
+    - Описание
+    - Кто создал пост
+    - Когда создали пост
+    -Когда изменили пост

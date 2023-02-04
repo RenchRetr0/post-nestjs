@@ -15,7 +15,7 @@ export class PostController {
 
     @ApiBearerAuth()
     @UseGuards(JWTAuthGuard, RoleGuard)
-    @Roles('admin', 'members')
+    @Roles('admin')
     @Post('create')
     async createPost(@Body() createPostDto: CreatePostDto, @Request() JwtUser): Promise<IPost> {
         return await this.postService.createPost(createPostDto, JwtUser.user);
